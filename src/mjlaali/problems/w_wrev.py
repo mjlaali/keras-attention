@@ -60,10 +60,14 @@ def experiment(model_factory, name, epochs=10):
     batch_size = 10
 
     for length in [10, 15, 20]:
+        base_dir = 'ckpts/%s-%d' % (name, length)
+        if not os.path.exists(base_dir):
+            os.mkdir(base_dir)
+
         callbacks = [
             keras.callbacks.EarlyStopping(patience=100),
-            keras.callbacks.ModelCheckpoint(filepath='ckpts/%s-%d/ckpt' % (name, length)),
-            keras.callbacks.TensorBoard(log_dir='ckpts/%s-%d/logs')
+            keras.callbacks.ModelCheckpoint(filepath='%s/ckpt' % base_dir),
+            keras.callbacks.TensorBoard(log_dir='%s/logs' % base_dir)
         ]
 
         x, y_onehot = make_dataset(l=length, dataset_size=training_size, num_token=num_token)
